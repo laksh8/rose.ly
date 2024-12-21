@@ -32,6 +32,30 @@ def add_habit(habit: str):
     conn.close()
     print(f"Habit '{habit}' added successfully!")
 
+
+def delete_habit(habit: str):
+    """Delete an existing habit in the database."""
+    try:
+        conn = sqlite3.connect("data/habits.db")
+        c = conn.cursor()
+        
+        # Execute DELETE query
+        c.execute("DELETE FROM habits WHERE name=?", (habit,))
+        
+        # Commit the changes to the database
+        conn.commit()
+        
+        # Check if any row was affected (habit found and deleted)
+        if c.rowcount == 0:
+            print(f"No habit named '{habit}' found.")
+        else:
+            print(f"Habit '{habit}' deleted successfully.")
+        
+    except sqlite3.Error as e:
+        print(f"Error occurred: {e}")
+    finally:
+        # Ensure connection is closed
+        conn.close()
 def check_in_habit(habit: str):
     """Mark a habit as completed for today."""
     conn = sqlite3.connect("data/habits.db")
