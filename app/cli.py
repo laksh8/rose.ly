@@ -10,9 +10,9 @@ def add(habit: str):
     add_habit(habit)
 
 @app.command()
-def check_in(habit: str):
+def check_in(full_credit: bool, habit: str):
     """Mark a habit as completed."""
-    check_in_habit(habit)
+    check_in_habit(full_credit, habit)
 
 @app.command()
 def progress():

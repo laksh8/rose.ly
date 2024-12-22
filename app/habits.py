@@ -8,7 +8,6 @@ def init_db():
         CREATE TABLE IF NOT EXISTS habits (
             id INTEGER PRIMARY KEY,
             name TEXT UNIQUE,
-            streak INTEGER DEFAULT 0,
             points INTEGER DEFAULT 0
         )
     """)
@@ -56,28 +55,33 @@ def delete_habit(habit: str):
     finally:
         # Ensure connection is closed
         conn.close()
-def check_in_habit(habit: str):
+
+
+
+def check_in_habit(full_credit: bool, habit: str):
     """Mark a habit as completed for today."""
     conn = sqlite3.connect("data/habits.db")
     c = conn.cursor()
-    c.execute("SELECT id, streak FROM habits WHERE name = ?", (habit,))
+    c.execute("SELECT id, points FROM habits WHERE name = ?", (habit,))
     result = c.fetchone()
     if not result:
         print(f"Habit '{habit}' not found!")
         return
 
-    habit_id, streak = result
+    habit_id, points = result
     from datetime import date
     today = date.today().isoformat()
     c.execute("SELECT * FROM logs WHERE habit_id = ? AND date = ?", (habit_id, today))
     if c.fetchone():
         print(f"Habit '{habit}' already checked in today!")
         return
-
-    streak += 1
-    points = streak * 10
-    c.execute("UPDATE habits SET streak = ?, points = ? WHERE id = ?", (streak, points, habit_id))
+    
+    if full_credit:
+        points += 10
+    else:
+        points += 5
+    c.execute("UPDATE habits SET points = ? WHERE id = ?", (points, habit_id))
     c.execute("INSERT INTO logs (habit_id, date) VALUES (?, ?)", (habit_id, today))
     conn.commit()
     conn.close()
-    print(f"Habit '{habit}' checked in! Current streak: {streak}, Points: {points}")
+    print(f"Habit '{habit}' checked in! Points: {points}")
