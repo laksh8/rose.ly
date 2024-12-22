@@ -19,7 +19,6 @@ def progress():
     """View progress for all habits."""
     view_progress()
 
-
 @app.command()
 def delete(habit: str):
     """Delete an existing habit in the database."""

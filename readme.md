@@ -1,6 +1,6 @@
 # rose.ly
 
-CLI app for tracking daily habits and adding a gamified twist by awarding points, badges and streaks
+CLI app for tracking daily habits and adding a gamified twist by awarding points, badges and streaks in python, using typer and rich
 
 ## features
 

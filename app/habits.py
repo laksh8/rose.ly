@@ -1,6 +1,8 @@
+import os
 import sqlite3
 
 def init_db():
+    os.makedirs("data", exist_ok=True)  # Create 'data' directory if it doesn't exist
     """Initialize the SQLite database and create tables."""
     conn = sqlite3.connect("data/habits.db")
     c = conn.cursor()
